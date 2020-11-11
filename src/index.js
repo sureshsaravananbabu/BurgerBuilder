@@ -3,11 +3,37 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import {BrowserRouter} from 'react-router-dom';
+import {Provider}  from 'react-redux';
+import {createStore,applyMiddleware,compose,combineReducers} from 'redux';
+import BurgerBuilderReducer from './store/reducer/BurgerBuilder.js'
+import thunk from 'redux-thunk';
+import orderReducer from './store/reducer/order'
+import authReducer from './store/reducer/auth';
+
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
+const rootreducer =combineReducers(
+  {
+    bugerBuilder:BurgerBuilderReducer,
+    order:orderReducer,
+    auth:authReducer
+  }
+);
+const store=createStore(rootreducer,composeEnhancers(
+  applyMiddleware(thunk)
+))
+
+const app=(
+<Provider store={store}>
+<BrowserRouter>
+<App/> 
+</BrowserRouter>
+</Provider>
+);
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+    app,
   document.getElementById('root')
 );
 
